@@ -1,34 +1,61 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import React from "react";
+import { Link, Tabs } from "expo-router";
+import { Pressable } from "react-native";
+import { Feather, FontAwesome } from "@expo/vector-icons";
+import { useAuthStore } from "@/store/userStore";
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function TabsLayout() {
+  const user = useAuthStore((state) => state.user);
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  console.log("User", user);
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
+    <Tabs>
       <Tabs.Screen
         name="index"
+        options={{ title: "Welcome" }}
+      />
+      <Tabs.Screen
+        name="home"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
+          tabBarLabel: "",
+          tabBarIcon: ({ color, size }) => (
+            <Link
+              href={user ? "/(tabs)/home" : "/login"}
+              asChild
+            >
+              <Pressable>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="bookmark-o"
+                    size={24}
+                    color={color}
+                  />
+                )}
+              </Pressable>
+            </Link>
           ),
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="profile"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          tabBarLabel: "",
+          tabBarIcon: ({ color, size }) => (
+            <Link
+              href={user ? "/(tabs)/profile" : "/login"}
+              asChild
+            >
+              <Pressable>
+                {({ pressed }) => (
+                  <Feather
+                    name="message-circle"
+                    size={28}
+                    color={color}
+                  />
+                )}
+              </Pressable>
+            </Link>
           ),
         }}
       />
